@@ -19,7 +19,7 @@ const ViewCart = () => {
     try {
       setLoading(true);
       const response = await axios.get('/api/users/saved-products', getAuthHeaders());
-      
+
       if (response.data.success) {
         setCartItems(response.data.data || []);
       } else {
@@ -49,7 +49,7 @@ const ViewCart = () => {
     setToastMessage(message);
     setToastType(type);
     setShowToast(true);
-    
+
     setTimeout(() => {
       setShowToast(false);
     }, 3000);
@@ -62,15 +62,13 @@ const ViewCart = () => {
   const handleRemoveFromCart = async (productId) => {
     try {
       setRemovingItem(productId);
-      
-      // Call API to remove item from cart
+
       await axios.delete(`/api/users/remove-product/${productId}`, getAuthHeaders());
-      
-      // Remove item from local state
+
       setCartItems(prevItems => prevItems.filter(item => item._id !== productId));
-      
+
       showToastMessage('Item removed from cart successfully!', 'success');
-      
+
     } catch (err) {
       console.error('Error removing item from cart:', err);
       showToastMessage('Failed to remove item from cart', 'error');
@@ -82,20 +80,15 @@ const ViewCart = () => {
   const handleBuyNow = async (productId) => {
     try {
       setPlacingOrder(true);
-      
+
       await axios.post('/api/products/place-order', {
         productId: productId,
         action: 'buy_now',
         quantity: 1
       }, getAuthHeaders());
-      
+
       showToastMessage('Order placed successfully!', 'success');
-      
-      // Optionally redirect to orders page
-      // setTimeout(() => {
-      //   window.location.href = '/orders';
-      // }, 2000);
-      
+
     } catch (err) {
       console.error('Error placing order:', err);
       showToastMessage('Failed to place order', 'error');
@@ -112,8 +105,7 @@ const ViewCart = () => {
 
     try {
       setPlacingOrder(true);
-      
-      // Create bulk order with all cart items
+
       const orderData = {
         products: cartItems.map(item => ({
           productId: item._id,
@@ -121,14 +113,13 @@ const ViewCart = () => {
         })),
         action: 'buy_all'
       };
-      
+
       await axios.post('/api/products/place-bulk-order', orderData, getAuthHeaders());
-      
+
       showToastMessage('All items ordered successfully!', 'success');
-      
-      // Clear cart after successful order
+
       setCartItems([]);
-      
+
     } catch (err) {
       console.error('Error placing bulk order:', err);
       showToastMessage('Failed to place order', 'error');
@@ -151,7 +142,6 @@ const ViewCart = () => {
     return (totalScore / cartItems.length).toFixed(1);
   };
 
-  // Styles
   const pageStyles = {
     fontFamily: 'Arial, sans-serif',
     margin: 0,
@@ -540,7 +530,6 @@ const ViewCart = () => {
     marginLeft: 'auto',
   };
 
-  // Add keyframes for animation
   const styleSheet = document.styleSheets[0];
   if (styleSheet && !document.querySelector('#toast-animation-cart')) {
     const keyframes = `
@@ -561,7 +550,6 @@ const ViewCart = () => {
     document.head.appendChild(style);
   }
 
-  // Search icon SVG
   const SearchIcon = () => (
     <svg
       style={searchIconStyles}
@@ -579,10 +567,9 @@ const ViewCart = () => {
     </svg>
   );
 
-  // Cart icon SVG
   const CartIcon = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 18.1 16.1 19 15 19H9C7.9 19 7 18.1 7 17V13H17ZM9 21C9.6 21 10 21.4 10 22S9.6 23 9 23 8 22.6 8 22 8.4 21 9 21ZM20 21C20.6 21 21 21.4 21 22S20.6 23 20 23 19 22.6 19 22 19.4 21 20 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      <path d="M3 3H5L5.4 5M7 13H17L21 5H5.4M7 13L5.4 5M7 13L4.7 15.3C4.3 15.7 4.6 16.5 5.1 16.5H17M17 13V17C17 18.1 16.1 19 15 19H9C7.9 19 7 18.1 7 17V13H17ZM9 21C9.6 21 10 21.4 10 22S9.6 23 9 23 8 22.6 8 22 8.4 21 9 21ZM20 21C20.6 21 21 21.4 21 22S20.6 23 20 23 19 22.6 19 22 19.4 21 20 21Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
 
@@ -646,8 +633,8 @@ const ViewCart = () => {
             {/* Cart Items */}
             <div style={cartItemsContainerStyles}>
               {cartItems.map((item) => (
-                <div 
-                  key={item._id} 
+                <div
+                  key={item._id}
                   style={cartItemStyles}
                   onMouseEnter={(e) => {
                     e.currentTarget.style.transform = 'translateY(-2px)';
@@ -663,9 +650,9 @@ const ViewCart = () => {
                     alt={item.name}
                     style={productImageStyles}
                   />
-                  
+
                   <div style={productInfoStyles}>
-                    <h3 
+                    <h3
                       style={productNameStyles}
                       onClick={() => handleViewProduct(item._id)}
                       onMouseEnter={(e) => {
@@ -678,11 +665,11 @@ const ViewCart = () => {
                       {item.name}
                     </h3>
                     <p style={productDescriptionStyles}>
-                      {item.description?.length > 100 
-                        ? `${item.description.substring(0, 100)}...` 
+                      {item.description?.length > 100
+                        ? `${item.description.substring(0, 100)}...`
                         : item.description}
                     </p>
-                    
+
                     <div style={productMetaStyles}>
                       <div style={trustScoreStyles}>
                         <span style={trustScoreBadgeStyles}>
@@ -694,7 +681,7 @@ const ViewCart = () => {
                       </span>
                     </div>
                   </div>
-                  
+
                   <div style={actionButtonsStyles}>
                     <button
                       style={viewButtonStyles}
@@ -769,7 +756,7 @@ const ViewCart = () => {
               >
                 Continue Shopping
               </button>
-              
+
               <button
                 style={{
                   ...buyAllButtonStyles,

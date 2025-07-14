@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import axios from "axios"
-// Removed: import { Input } from "../ui/input" // Assuming Input is not directly used in this file's JSX, or is handled elsewhere
 
 const allowedStatus = ["pending", "processing", "shipped", "delivered", "cancelled"]
 
@@ -10,7 +9,7 @@ export default function AdminOrders() {
   const [orders, setOrders] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const [updatingStatus, setUpdatingStatus] = useState({}) // To track loading state for individual status updates
+  const [updatingStatus, setUpdatingStatus] = useState({})
   const [showToast, setShowToast] = useState(false)
   const [toastMessage, setToastMessage] = useState("")
   const [toastType, setToastType] = useState("success")
@@ -19,12 +18,11 @@ export default function AdminOrders() {
     fetchOrders()
   }, [])
 
-  // Effect to hide toast after duration
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => {
         setShowToast(false)
-      }, 4000) // Duration for the toast
+      }, 4000)
 
       return () => clearTimeout(timer)
     }
@@ -80,7 +78,6 @@ export default function AdminOrders() {
       )
 
       if (response.data.success) {
-        // Optimistically update the UI
         setOrders((prevOrders) =>
           prevOrders.map((order) => (order._id === orderId ? { ...order, status: newStatus } : order)),
         )
@@ -106,7 +103,6 @@ export default function AdminOrders() {
     setShowToast(false)
   }
 
-  // Styles (reusing from MyOrders.js for consistency)
   const pageStyles = {
     fontFamily: "Arial, sans-serif",
     margin: 0,
@@ -141,13 +137,13 @@ export default function AdminOrders() {
     borderRadius: "12px",
     padding: "20px",
     boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-    overflowX: "auto", // For responsiveness on small screens
+    overflowX: "auto",
   }
 
   const tableStyles = {
     width: "100%",
     borderCollapse: "collapse",
-    minWidth: "800px", // Ensure table doesn't get too small
+    minWidth: "800px",
   }
 
   const thStyles = {
@@ -218,7 +214,6 @@ export default function AdminOrders() {
     color: "#dc3545",
   }
 
-  // Toast Styles (inline)
   const getToastBackgroundStyles = (type) => {
     switch (type) {
       case "success":
@@ -260,10 +255,6 @@ export default function AdminOrders() {
     marginLeft: "auto",
   }
 
-  // Add keyframes for animation (if not already in global CSS)
-  // This part assumes you have a way to inject global CSS or that this animation is already defined.
-  // For CRA, you might put this in index.css or App.css.
-  // For demonstration, I'll include it as a direct style injection, but typically you'd use a CSS file.
   useEffect(() => {
     const styleId = "toast-animation-admin-orders"
     if (!document.getElementById(styleId)) {

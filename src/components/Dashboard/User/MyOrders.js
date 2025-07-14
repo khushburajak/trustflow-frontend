@@ -18,11 +18,10 @@ const MyOrders = () => {
     const fetchOrders = async () => {
         try {
             setLoading(true)
-            setError(null) // Clear previous errors
+            setError(null)
 
             const token = localStorage.getItem("authToken")
             if (!token) {
-                // If no token, user is not logged in, so no orders to fetch
                 setOrders([])
                 setLoading(false)
                 return
@@ -33,7 +32,7 @@ const MyOrders = () => {
             if (response.data && response.data.success && Array.isArray(response.data.orders)) {
                 setOrders(response.data.orders)
             } else {
-                setOrders([]) // No data or invalid data format
+                setOrders([])
             }
         } catch (err) {
             console.error("Error fetching orders:", err)
@@ -68,7 +67,6 @@ const MyOrders = () => {
         setShowToast(false)
     }
 
-    // Styles
     const pageStyles = {
         fontFamily: "Arial, sans-serif",
         margin: 0,
@@ -205,13 +203,13 @@ const MyOrders = () => {
         borderRadius: "12px",
         padding: "20px",
         boxShadow: "0 2px 8px rgba(0, 0, 0, 0.1)",
-        overflowX: "auto", // For responsiveness on small screens
+        overflowX: "auto",
     }
 
     const tableStyles = {
         width: "100%",
         borderCollapse: "collapse",
-        minWidth: "800px", // Ensure table doesn't get too small
+        minWidth: "800px",
     }
 
     const thStyles = {
@@ -234,22 +232,22 @@ const MyOrders = () => {
     }
 
     const statusBadgeStyles = (status) => {
-        let backgroundColor = "#6c757d" // Default: Grey
+        let backgroundColor = "#6c757d"
         let color = "white"
 
         switch (status) {
             case "Delivered":
-                backgroundColor = "#28a745" // Green
+                backgroundColor = "#28a745"
                 break
             case "Processing":
-                backgroundColor = "#ffc107" // Yellow
+                backgroundColor = "#ffc107"
                 color = "#333"
                 break
             case "Shipped":
-                backgroundColor = "#007bff" // Blue
+                backgroundColor = "#007bff"
                 break
             case "Cancelled":
-                backgroundColor = "#dc3545" // Red
+                backgroundColor = "#dc3545"
                 break
             default:
                 break
@@ -349,7 +347,6 @@ const MyOrders = () => {
         marginLeft: "auto",
     }
 
-    // Add keyframes for animation
     const styleSheet = document.styleSheets[0]
     if (styleSheet && !document.querySelector("#toast-animation-orders")) {
         const keyframes = `
@@ -370,7 +367,6 @@ const MyOrders = () => {
         document.head.appendChild(style)
     }
 
-    // Search icon SVG
     const SearchIcon = () => (
         <svg
             style={searchIconStyles}
@@ -428,7 +424,6 @@ const MyOrders = () => {
                             <thead>
                                 <tr>
                                     <th style={thStyles}>Order ID</th>
-                                    {/* <th style={thStyles}>Ordered By</th> */}
                                     <th style={thStyles}>Items</th>
                                     <th style={thStyles}>Quantity</th>
                                     <th style={thStyles}>Amount</th>
@@ -440,7 +435,6 @@ const MyOrders = () => {
                                 {orders.map((order) => (
                                     <tr key={order._id}>
                                         <td style={tdStyles}>{order.orderID}</td>
-                                        {/* <td style={tdStyles}>{order.user.username}</td> */}
                                         <td style={tdStyles}>
                                             {order.items.map((item, index) => (
                                                 <div key={index}>{item.product.name}</div>

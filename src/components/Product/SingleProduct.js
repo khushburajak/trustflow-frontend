@@ -21,12 +21,10 @@ const SingleProduct = () => {
   const [toastMessage, setToastMessage] = useState("")
   const [toastType, setToastType] = useState("success")
 
-  // Cart related states
   const [isInCart, setIsInCart] = useState(false)
   const [checkingCartStatus, setCheckingCartStatus] = useState(true)
   const [addingToCart, setAddingToCart] = useState(false)
 
-  // New states for shipping address modal
   const [showShippingModal, setShowShippingModal] = useState(false)
   const [shippingAddress, setShippingAddress] = useState("")
   const [confirmingOrder, setConfirmingOrder] = useState(false)
@@ -35,9 +33,7 @@ const SingleProduct = () => {
     const fetchData = async () => {
       try {
         setLoading(true)
-        // First check cart status
         await checkCartStatus()
-        // Then fetch product data
         const productRes = await axios.get(`/api/products/${id}`)
         setProduct(productRes.data)
         setReviews(staticReviews)
@@ -63,7 +59,6 @@ const SingleProduct = () => {
     try {
       setCheckingCartStatus(true)
       const response = await axios.get("/api/users/saved-products", getAuthHeaders())
-      // CORRECT: response.data is an object, not an array
       const productsArray = response.data?.data || []
       const currentId = String(id)
       const isProductInCart = productsArray.some(
@@ -147,7 +142,6 @@ const SingleProduct = () => {
         setIsInCart(false)
         showToastMessage("Product removed from cart successfully!", "success")
       } else {
-        // Add to cart
         await axios.post(
           `/api/users/save-product/${id}`,
           {
@@ -170,7 +164,6 @@ const SingleProduct = () => {
     }
   }
 
-  // MODIFIED: handleBuyNow now opens the shipping modal
   const handleBuyNow = () => {
     const token = localStorage.getItem("authToken")
     if (!token) {
@@ -178,10 +171,9 @@ const SingleProduct = () => {
       return
     }
     setShowShippingModal(true)
-    setShippingAddress("") // Clear any previous address
+    setShippingAddress("")
   }
 
-  // NEW: handleConfirmOrder for placing the order with shipping address
   const handleConfirmOrder = async (e) => {
     e.preventDefault()
     if (!shippingAddress.trim()) {
@@ -205,7 +197,7 @@ const SingleProduct = () => {
       await axios.post("/api/users/place-order", orderPayload, getAuthHeaders())
       showToastMessage("Order placed successfully!", "success")
       setShowShippingModal(false)
-      setShippingAddress("") // Clear address after successful order
+      setShippingAddress("")
     } catch (err) {
       console.error("Error placing order:", err)
       const errorMessage = err.response?.data?.message || "Failed to place order"
@@ -322,7 +314,6 @@ const SingleProduct = () => {
     ))
   }
 
-  // Styles (kept as is from user's input)
   const pageStyles = {
     fontFamily: "Arial, sans-serif",
     margin: 0,
@@ -751,7 +742,6 @@ const SingleProduct = () => {
     fontSize: '22px',
   };
 
-  // Icons (kept as is from user's input)
   const CartIcon = () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path
@@ -899,11 +889,11 @@ const SingleProduct = () => {
               <button
                 style={{
                   ...buyButtonStyles,
-                  opacity: confirmingOrder ? 0.7 : 1, // Use confirmingOrder for buy button
+                  opacity: confirmingOrder ? 0.7 : 1,
                   cursor: confirmingOrder ? "not-allowed" : "pointer",
                 }}
-                onClick={handleBuyNow} // This now opens the modal
-                disabled={confirmingOrder} // Disable if order is being confirmed
+                onClick={handleBuyNow}
+                disabled={confirmingOrder}
                 onMouseEnter={(e) => {
                   if (!confirmingOrder) {
                     e.target.style.backgroundColor = "#0056b3"
@@ -1091,7 +1081,7 @@ const SingleProduct = () => {
         </div>
       )}
 
-      {/* NEW: Shipping Address Modal */}
+      {/* Shipping Address Modal */}
       {showShippingModal && (
         <div style={modalOverlayStyles} onClick={closeShippingModal}>
           <div style={modalStyles} onClick={(e) => e.stopPropagation()}>
