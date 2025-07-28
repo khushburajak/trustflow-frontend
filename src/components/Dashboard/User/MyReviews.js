@@ -128,6 +128,10 @@ const MyReviews = () => {
     }));
   };
 
+  const handleViewProduct = (productId) => {
+    window.location.href = `/products/${productId}`;
+  };
+
   const handleCommentChange = (e) => {
     setEditFormData(prev => ({
       ...prev,
@@ -507,11 +511,30 @@ const MyReviews = () => {
             >
               <div style={reviewHeaderStyles}>
                 <div style={productInfoStyles}>
-                  <div style={productNameStyles}>
-                    {review.productName}
-                  </div>
-                  <div style={productDescriptionStyles}>
-                    {review.productDescription}
+                  <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start' }}>
+                    <img
+                      src={review.product?.image}
+                      alt={review.product?.name}
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
+                        border: '1px solid #ccc'
+                      }}
+                    />
+                    <div>
+                      <div
+                        style={{ ...productNameStyles, cursor: 'pointer', color: '#007bff', textDecoration: 'underline' }}
+                        onClick={() => handleViewProduct(review.product?._id)}
+                      >
+                        {review.product?.name || 'Product Name'}
+                      </div>
+
+                      <div style={productDescriptionStyles}>
+                        {review.product?.description || 'Product description not available.'}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <button

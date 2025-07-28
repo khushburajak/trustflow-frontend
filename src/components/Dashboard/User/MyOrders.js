@@ -436,9 +436,11 @@ const MyOrders = () => {
                                     <tr key={order._id}>
                                         <td style={tdStyles}>{order.orderID}</td>
                                         <td style={tdStyles}>
-                                            {order.items.map((item, index) => (
-                                                <div key={index}>{item.product.name}</div>
-                                            ))}
+                                            {order.items
+                                                .map(item => item.product?.name)
+                                                .filter(name => name)
+                                                .join(', ')
+                                            }
                                         </td>
                                         <td style={tdStyles}>{order.items.reduce((total, item) => total + item.quantity, 0)}</td>
                                         <td style={tdStyles}>${order.totalAmount.toFixed(2)}</td>
